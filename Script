@@ -1,0 +1,432 @@
+var myWindow = new Window("palette", "Motion Script", undefined, {resizeable:true, closeButton: false});
+
+
+// Create a group with horizontal orientation
+var group = myWindow.add("group");
+group.orientation = "row";
+
+var SinButton = group.add("button", undefined, "SIN [x]");
+var SinButton2 = group.add("button", undefined, "[x, x]");
+
+
+//Elastic button
+var group1 = myWindow.add("group");
+group1.orientation = "row";
+
+var ElasticButton = group1.add("button", undefined, "Elastic [x]");
+var ElasticButtonxx = group1.add("button", undefined, "[x, x]");
+
+var group3 = myWindow.add("group");
+group3.orientation = "row";
+
+var GlitchMap = group3.add("button", undefined, "GlitchMap");
+//var Screenshot = group3.add("button", undefined, "Screenshot");
+var Null1 = group3.add("button", undefined, "Null");
+var Solid = group3.add("button", undefined, "Solid");
+
+//var group4 = myWindow.add("group");
+//group4.orientation = "row";
+
+//var Bezier1 = group4.add("button", undefined, "66/88");
+
+var group5 = myWindow.add("group");
+group5.orientation = "row";
+
+var Wiggle = group5.add("button", undefined, "Wiggle [x]");
+
+var group6 = myWindow.add("group");
+group6.orientation = "row";
+
+var MakeFancy = group6.add("button", undefined, "Make Fancy");
+var GenerateGrad = group6.add("button", undefined, "Gradient");
+
+
+ElasticButton.onClick = function () {
+if (app.project.activeItem && app.project.activeItem.selectedProperties.length > 0) {
+    var comp = app.project.activeItem;
+  
+    for (var i = 0; i < comp.selectedProperties.length; i++) {
+      var selectedProperty = comp.selectedProperties[i];
+  
+      if (selectedProperty.canSetExpression && selectedProperty.propertyType !== PropertyType.NO_VALUE) {
+        
+
+        var slider = comp.selectedLayers[0].Effects.addProperty("ADBE Slider Control");
+        slider.name = "Amp " + selectedProperty.name;
+        slider.property("Slider").setValue(0.1);
+        var slider2 = comp.selectedLayers[0].Effects.addProperty("ADBE Slider Control");
+        slider2.name = "Decay " + selectedProperty.name;  
+        slider2.property("Slider").setValue(4);
+
+        var time1 = comp.time; 
+        var time2 = comp.time + 0.1; 
+
+        selectedProperty.setValueAtTime(time1,  selectedProperty.value);
+        selectedProperty.setValueAtTime(time2, selectedProperty.value + 100);
+
+        selectedProperty.expression = "amp = effect('Amp "+selectedProperty.name+"')('Slider');freq = 2.0;decay = effect('Decay "+selectedProperty.name+"')('Slider');n = 0;time_max = 4;if (numKeys > 0){n = nearestKey(time).index;if (key(n).time > time){n--;}}if (n == 0){ t = 0;}else{t = time - key(n).time;}if (n > 0 && t < time_max){v = velocityAtTime(key(n).time - thisComp.frameDuration/10);value + v*amp*Math.sin(freq*t*2*Math.PI)/Math.exp(decay*t);}else{value};";
+
+      } else {
+        alert("The selected property cannot have expressions or keyframes applied to it.");
+      }
+    }
+  } else {
+    alert("Please select at least one animatable property.");
+  }
+  
+};
+
+SinButton.onClick = function () {
+    if (app.project.activeItem && app.project.activeItem.selectedProperties.length > 0) {
+        var comp = app.project.activeItem;
+      
+        for (var i = 0; i < comp.selectedProperties.length; i++) {
+          var selectedProperty = comp.selectedProperties[i];
+      
+          if (selectedProperty.canSetExpression && selectedProperty.propertyType !== PropertyType.NO_VALUE) {
+         
+            var slider = comp.selectedLayers[0].Effects.addProperty("ADBE Slider Control");
+            slider.name = "Sin Speed " + selectedProperty.name;
+            slider.property("Slider").setValue(20);
+            var slider2 = comp.selectedLayers[0].Effects.addProperty("ADBE Slider Control");
+            slider2.name = "Sin Amp " + selectedProperty.name;  
+            slider2.property("Slider").setValue(20);
+        
+            selectedProperty.expression = "speed = effect('Sin Speed "+selectedProperty.name+"')('Slider');amp = effect('Sin Amp "+selectedProperty.name+"')('Slider');Math.sin(time * speed ) * amp ;";
+          } else {
+            alert("The selected property cannot have expressions or keyframes applied to it.");
+          }
+        }
+      } else {
+        alert("Please select at least one animatable property in After Effects.");
+      }
+};
+
+SinButton2.onClick = function () {
+  if (app.project.activeItem && app.project.activeItem.selectedProperties.length > 0) {
+      var comp = app.project.activeItem;
+    
+      for (var i = 0; i < comp.selectedProperties.length; i++) {
+        var selectedProperty = comp.selectedProperties[i];
+    
+        if (selectedProperty.canSetExpression && selectedProperty.propertyType !== PropertyType.NO_VALUE) {
+       
+          var slider = comp.selectedLayers[0].Effects.addProperty("ADBE Slider Control");
+          slider.name = "Sin Speed " + selectedProperty.name;
+          slider.property("Slider").setValue(20);
+          var slider2 = comp.selectedLayers[0].Effects.addProperty("ADBE Slider Control");
+          slider2.name = "Sin Amp " + selectedProperty.name;  
+          slider2.property("Slider").setValue(20);
+      
+          selectedProperty.expression = "speed = effect('Sin Speed "+selectedProperty.name+"')('Slider');amp = effect('Sin Amp "+selectedProperty.name+"')('Slider');[Math.sin(time * speed ) * amp, Math.sin(time * speed ) * amp];";
+        } else {
+          alert("The selected property cannot have expressions or keyframes applied to it.");
+        }
+      }
+    } else {
+      alert("Please select at least one animatable property in After Effects.");
+    }
+};
+
+ElasticButtonxx.onClick = function () {
+  if (app.project.activeItem && app.project.activeItem.selectedProperties.length > 0) {
+      var comp = app.project.activeItem;
+    
+      for (var i = 0; i < comp.selectedProperties.length; i++) {
+        var selectedProperty = comp.selectedProperties[i];
+    
+        if (selectedProperty.canSetExpression && selectedProperty.propertyType !== PropertyType.NO_VALUE) {
+
+          var slider = comp.selectedLayers[0].Effects.addProperty("ADBE Slider Control");
+          slider.name = "Amp " + selectedProperty.name;
+          slider.property("Slider").setValue(0.1);
+          var slider2 = comp.selectedLayers[0].Effects.addProperty("ADBE Slider Control");
+          slider2.name = "Decay " + selectedProperty.name;  
+          slider2.property("Slider").setValue(4);
+    
+          var time1 = comp.time; 
+          var time2 = comp.time + 0.1; 
+        
+          selectedProperty.setValueAtTime(time1, selectedProperty.value);
+          selectedProperty.setValueAtTime(time2, [selectedProperty.value[0]+100, selectedProperty.value[1]+100]);
+  
+          selectedProperty.expression = "amp = effect('Amp "+selectedProperty.name+"')('Slider');freq = 2.0;decay = effect('Decay "+selectedProperty.name+"')('Slider');n = 0;time_max = 4;if (numKeys > 0){n = nearestKey(time).index;if (key(n).time > time){n--;}}if (n == 0){ t = 0;}else{t = time - key(n).time;}if (n > 0 && t < time_max){v = velocityAtTime(key(n).time - thisComp.frameDuration/10);value + v*amp*Math.sin(freq*t*2*Math.PI)/Math.exp(decay*t);}else{value};";
+        } else {
+          alert("The selected property cannot have expressions or keyframes applied to it.");
+        }
+      }
+    } else {
+      alert("Please select at least one animatable property.");
+    }
+    
+  };
+
+
+GlitchMap.onClick = function () {
+  // Check if a composition is selected
+  if (app.project.activeItem && app.project.activeItem instanceof CompItem) {
+    var comp = app.project.activeItem;
+
+    // Check if a layer is selected in the composition
+    if (comp.selectedLayers.length === 1) {
+        var selectedLayer = comp.selectedLayers[0];
+
+        // Create a new solid layer for the glitch map
+        var glitchMapLayer = comp.layers.addSolid([1, 1, 1], "Glitch map", comp.width, comp.height, comp.pixelAspect, comp.duration);
+
+        // Add the Fractal Noise effect to the glitch map layer
+        var fractalNoise = glitchMapLayer.Effects.addProperty("Fractal Noise");
+
+        // Set parameters for the Fractal Noise effect
+        fractalNoise.property("Noise Type").setValue(1); // Block noise type
+        fractalNoise.property("Complexity").setValue(2); // Complexity set to 2
+        fractalNoise.property("Contrast").setValue(150); // Contrast set to 150
+        fractalNoise.property("Brightness").setValue(-20); // Brightness set to -20
+        fractalNoise.property("Uniform Scaling").setValue(false); // Uncheck uniform scale
+        fractalNoise.property("Scale Width").setValue(600); // Set Scale Width to 600
+        fractalNoise.property("Scale Height").setValue(120); // Set Scale Height to 120
+        fractalNoise.property("Evolution").expression = "time*1000"; // Apply the expression to evolution
+
+        var precomp1 = comp.layers.precompose([glitchMapLayer.index], "Glitch map", true);
+
+        for (var i = 1; i <= comp.numLayers; i++) {
+          var layer = comp.layer(i);
+          if (layer.name === "Glitch map") {
+              // Make the layer invisible
+              layer.enabled = false;
+
+              // Move the layer to the bottom of the layer stack
+              layer.moveToEnd();
+
+              break; // Exit the loop once the layer is found
+          }
+      }
+
+        for (var i = 1; i <= comp.numLayers; i++) {
+          var layer = comp.layer(i);
+          if (layer.name === "Glitch map") {
+              // Make the layer invisible
+        // Apply the Displacement Map effect to the selected layer
+        var displacementMapEffect = selectedLayer.Effects.addProperty("Displacement Map");
+        displacementMapEffect.property("Displacement Map Layer").setValue(layer.index); // Set the Displacement Map Layer to the bottom layer in the composition
+
+        var timeOfSecondKeyframe = comp.time; // current time
+        var firstKeyframeTime = timeOfSecondKeyframe - 0.1; 
+        var thirdKeyframeTime = timeOfSecondKeyframe + 0.1; 
+
+        // Set values for the keyframes
+        displacementMapEffect.property("Max Vertical Displacement").setValue(0);
+        displacementMapEffect.property("Max Horizontal Displacement").setValueAtTime(firstKeyframeTime, 0); 
+        displacementMapEffect.property("Max Horizontal Displacement").setValueAtTime(timeOfSecondKeyframe, 300); 
+        displacementMapEffect.property("Max Horizontal Displacement").setValueAtTime(thirdKeyframeTime, 0); 
+
+        displacementMapEffect.property("Max Vertical Displacement").setValueAtTime(firstKeyframeTime, 0);
+        displacementMapEffect.property("Max Vertical Displacement").setValueAtTime(timeOfSecondKeyframe, -150); 
+        displacementMapEffect.property("Max Vertical Displacement").setValueAtTime(thirdKeyframeTime, 0); 
+              break; // Exit the loop once the layer is found
+          }
+    }
+
+
+    } else {
+        alert("Please select a single layer in the composition.");
+    }
+  } else {
+    alert("Please select a composition.");
+  }
+}
+/*
+Screenshot.onClick = function () {
+
+      var comp = app.project.activeItem;
+      // Render the solid layer
+      var outputFolder = "~/Desktop";
+
+      // Store the original work area start and duration
+      var originalWorkAreaStart = comp.workAreaStart;
+      var originalWorkAreaDuration = comp.workAreaDuration;
+
+      // Set the work area start to the current time and duration to 1 frame
+      comp.workAreaStart = comp.time;
+      comp.workAreaDuration = 1/comp.frameRate;
+
+      var item = app.project.renderQueue.items.add(comp);
+      var outputModule = item.outputModule(1);
+      outputModule.applyTemplate("_HIDDEN X-Factor 8");
+
+      outputModule.file = new File("~/Desktop" + "/screenshot" + comp.name);
+      app.project.renderQueue.render();
+
+      // Restore the original work area start and duration
+      comp.workAreaStart = originalWorkAreaStart;
+      comp.workAreaDuration = originalWorkAreaDuration; 
+
+
+}
+
+Bezier1.onClick = function () {
+  var myProp = app.project.activeItem.selectedProperties[0].selectedKeys;
+  var selectedLayer = app.project.activeItem.selectedProperties[0];
+  alert(selectedLayer);
+  selectedLayer.setTemporalEaseAtKey(1, [0, 33.33333], [0, 33.33333]);
+  selectedLayer.setTemporalEaseAtKey(2, [0, 33.33333], [0, 33.33333]);
+
+}
+*/
+
+Wiggle.onClick = function () {
+  if (app.project.activeItem && app.project.activeItem.selectedProperties.length > 0) {
+    var comp = app.project.activeItem;
+  
+    for (var i = 0; i < comp.selectedProperties.length; i++) {
+      var selectedProperty = comp.selectedProperties[i];
+  
+      if (selectedProperty.canSetExpression && selectedProperty.propertyType !== PropertyType.NO_VALUE) {
+     
+        var slider = comp.selectedLayers[0].Effects.addProperty("ADBE Slider Control");
+        slider.name = "Wiggle Freq " + selectedProperty.name;
+        slider.property("Slider").setValue(5);
+        var slider2 = comp.selectedLayers[0].Effects.addProperty("ADBE Slider Control");
+        slider2.name = "Wiggle Amp " + selectedProperty.name;  
+        slider2.property("Slider").setValue(20);
+    
+        selectedProperty.expression = "wiggle(" + "effect('Wiggle Freq "+selectedProperty.name+"')('Slider'),effect('Wiggle Amp " + selectedProperty.name +"')('Slider'));";
+      } else {
+        alert("The selected property cannot have expressions or keyframes applied to it.");
+      }
+    }
+  } else {
+    alert("Please select at least one animatable property in After Effects.");
+  }
+}
+
+Null1.onClick = function () {
+  var comp = app.project.activeItem;
+  var nullLayer = comp.layers.addNull(app.project.activeItem.duration);
+}
+
+Solid.onClick = function () {
+  var comp = app.project.activeItem;
+  var solidLayer = comp.layers.addSolid([0, 0, 0], "My Solid", comp.width, comp.height, comp.pixelAspect, comp.duration);
+}
+
+MakeFancy.onClick = function () {
+  var comp = app.project.activeItem;
+  var layer = comp.selectedLayers[0];
+  var effect = layer.Effects.addProperty("Glow");
+
+  effect.property("Glow Radius").setValue(80);
+  effect.property("Glow Intensity").setValue(0.8); 
+
+  var turbulentDisplace = layer.Effects.addProperty("Turbulent Displace");
+
+  // Set the Turbulent Displace effect properties
+  turbulentDisplace.property("Amount").setValue(10); // Set the amount to 10
+  turbulentDisplace.property("Size").setValue(7); // Set the size to 7
+
+  // Add an expression to the Random Seed property
+  turbulentDisplace.property("Random Seed").expression = "posterizeTime(6);" + "time*10";
+}
+
+GenerateGrad.onClick = function() {
+  var comp = app.project.activeItem;
+
+  var gradientLayer = comp.layers.addSolid([1, 1, 1], "Gradient", comp.width, comp.height, 1, comp.duration);
+  var gradientEffect = gradientLayer.Effects.addProperty("ADBE Ramp");
+  
+  var verticalBool = false;
+  // if verticalBool is true, the gradient is top down, else left right
+  // we will randomise this now with a simple 1 or 2 randomisation
+  if(Math.floor(Math.random() * 2)+1 == 1) {
+      verticalBool = false;
+      } else {
+      verticalBool = true;
+          }
+  
+  var xRandom = Math.floor(Math.random() * comp.width);
+  var yRandom = Math.floor(Math.random() * comp.height);
+  
+  // the xRandom and yRandom will be used only for the radial case, and we now want to clamp them so the random point will never be towards the edge of our layer (a sort of padding)
+  if(xRandom < comp.width * .2) {
+      xRandom = comp.width * .2;
+      }
+  if(yRandom < comp.height * .2) {
+      yRandom = comp.height * .2;
+      }
+  if(xRandom > comp.width * .8) {
+      xRandom = comp.width * .8;
+      }
+  if(yRandom > comp.height * .8) {
+      yRandom = comp.height * .8;
+      }
+  
+  // linear or radial ramp
+  if(true) {
+   // linear
+   // set the position depending if its vertical or horizontal
+   switch(verticalBool) {
+       case false:
+       gradientEffect.property(1).setValue([0, comp.height*.5]);
+       gradientEffect.property(3).setValue([comp.width, comp.height*.5]);
+       break;
+       case true:
+       gradientEffect.property(1).setValue([comp.width*.5, 0]);
+       gradientEffect.property(3).setValue([comp.width*.5, comp.height]);
+       break;
+       }
+      } else {
+   // radial
+   // we only need to randomise the position of the "Start of Ramp" with a radial type
+   gradientEffect.property(5).setValue(2);
+   gradientEffect.property(1).setValue([xRandom, yRandom]);
+          }
+      
+   var rRandom = Math.random();
+   var gRandom = Math.random();
+   var bRandom =Math.random();
+   
+   // lastly colour randomisation, which is the same whether it is linear or radial
+   gradientEffect.property(2).setValue([rRandom, gRandom, bRandom]);
+   rRandom = Math.random();
+   gRandom = Math.random();
+   bRandom = Math.random();
+   gradientEffect.property(4).setValue([rRandom, gRandom, bRandom]);
+
+
+}
+
+
+      myWindow.layout.layout(true);
+      myWindow.layout.resize();
+      myWindow.onResizing = myWindow.onResize = function() {this.layout.resize();};
+      myWindow.show();      
+
+      // Make the panel dockable
+
+
+var scriptName = "myWindow";
+var myScriptPal;
+var winGfx = myWindow.graphics;
+var metadata = "encoding:UTF-8";
+var res = 
+   "group { \
+      orientation:'column', alignment:['fill','top'], \
+      groupOne: Group { \
+         orientation: 'row', alignment:['fill','top'], \
+         SinButton: Button { text:'SIN [x]', preferredSize:[-1,20] }, \
+         SinButton2: Button { text:'SIN [x, x]', preferredSize:[-1,20] }, \
+      }, \
+      groupTwo: Group { \
+         orientation: 'row', alignment:['fill','top'], \
+         ElasticButton: Button { text:'default [x]', preferredSize:[-1,20] }, \
+         ElasticButton1: Button { text:'less AMP [x]', preferredSize:[-1,20] }, \
+         ElasticButton2: Button { text:'high decay [x]', preferredSize:[-1,20] }, \
+      }, \
+      groupFour: Group { \
+         orientation: 'row', alignment:['fill','top'], \
+         ElasticButtonxx: Button { text:'default [x, x]', preferredSize:[-1,20] }, \
+         ElasticButtonxx1: Button { text:'less AMP [x, x]', preferredSize:[-1,20] }, \
+         ElasticButtonxx2: Button { text:'high decay [x, x]', preferredSize:[-1,20] }, \
+      }, \
+   }";
+myScriptPal = myWindow.add(res);
